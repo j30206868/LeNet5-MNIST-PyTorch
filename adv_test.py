@@ -16,12 +16,11 @@ def custom_fast_gradient(model_fn, x, eps, clip_min, clip_max, y):
     loss_fn = torch.nn.CrossEntropyLoss()
     loss = loss_fn(model_fn(x), y.long())
     loss.backward()
-    # with torch.no_grad():
     optimal_perturbation = eps * torch.sign(x.grad)
     adv_x = x + optimal_perturbation
     adv_x = torch.clamp(adv_x, clip_min, clip_max)
-    
     return x + optimal_perturbation
+    
 if __name__ == '__main__':
     batch_size = 1
     train_dataset = mnist.MNIST(root='./train', train=True, transform=ToTensor())
